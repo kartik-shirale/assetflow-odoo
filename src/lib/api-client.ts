@@ -20,3 +20,37 @@ export async function apiPost<T>(url: string, body: unknown): Promise<ApiResult<
     return { data: null, error: "Network error — please try again" };
   }
 }
+
+export async function apiGet<T>(url: string): Promise<ApiResult<T>> {
+  try {
+    const res = await fetch(url, { method: "GET" });
+    const json = await res.json();
+
+    if (!res.ok) {
+      return { data: null, error: json.error ?? "Something went wrong" };
+    }
+    return { data: json, error: null };
+  } catch {
+    return { data: null, error: "Network error — please try again" };
+  }
+}
+
+export async function apiPatch<T>(url: string, body: unknown): Promise<ApiResult<T>> {
+  try {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      return { data: null, error: json.error ?? "Something went wrong" };
+    }
+
+    return { data: json, error: null };
+  } catch {
+    return { data: null, error: "Network error — please try again" };
+  }
+}
